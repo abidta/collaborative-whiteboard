@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="stylesheets/style.css">
+</head>
+
+<body>
+  <section>
+    <div class="container">
+      <div id="tool-bar">
+        <h1>Draw</h1>
+        <label for="stroke">Stroke</label>
+        <input id="stroke" name="stroke" type="color">
+        <label for="line-width">Line width</label>
+        <input id="line-width" name="line-width" type="number" value="5">
+        <button id="clear">Clear</button>
+        <button id="save">Save</button>
+      </div>
+      <div class="drawing-board">
+        <canvas id="drawing-board">
+
+        </canvas>
+      </div>
+    </div>
+  </section>
+</body>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const canvas = document.getElementById('drawing-board')
+  const toolBar = document.getElementById('tool-bar')
+  const ctx = canvas.getContext('2d')
+
+  const canvasOffsetX = canvas.offsetLeft
+  const canvasOffsetY = canvas.offsetTop
+
+  canvas.width = window.innerWidth - canvasOffsetX
+  canvas.height = window.innerHeight - canvasOffsetY
+
+  let isPainting = false
+  let lineWidth = 5
+  let startX
+  let startY
+
+  toolBar.addEventListener('click', (e) => {
+    if (e.target.id === 'clear') {
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+    }
+    if (e.target.id === 'save') {
+      let url = canvas.toDataURL()
+
+      console.log(url)
+    }
+  })
+
+  toolBar.addEventListener('change', (e) => {
+    if (e.target.id === 'stroke') {
+      ctx.strokeStyle = e.target.value
+    }
+    if (e.target.id === 'line-width') {
+      lineWidth = e.target.value
+    }
+  })
+
+  const draw = (e) => {
+    if (!isPainting) {
+      return
+    }
+    console.log("..")
+    ctx.lineWidth = lineWidth
+    ctx.lineCap = 'round'
+    ctx.lineTo(e.clientX - canvasOffsetX, e.clientY)
+    ctx.stroke()
+
+  }
+
+  canvas.addEventListener('mousedown', (e) => {
+    console.log('hi')
+    isPainting = true
+    startX = e.clientX
+    startY = e.clientY
+    ctx.beginPath()
+  })
+  canvas.addEventListener('mouseup', (e => {
+    console.log('lo')
+    isPainting = false
+    ctx.stroke()
+    //ctx.beginPath()
+
+  }))
+
+  canvas.addEventListener('mousemove', draw)
+</script>
+
+</html>
