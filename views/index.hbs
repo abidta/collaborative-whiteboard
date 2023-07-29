@@ -30,6 +30,7 @@
 </body>
 <script src="/socket.io/socket.io.js"></script>
 <script>
+  const socket = io()
   const canvas = document.getElementById('drawing-board')
   const toolBar = document.getElementById('tool-bar')
   const ctx = canvas.getContext('2d')
@@ -41,9 +42,12 @@
   canvas.height = window.innerHeight - canvasOffsetY
 
   let isPainting = false
+  let collabPainting = false
   let lineWidth = 5
-  let startX
-  let startY
+  let clientX
+  let clientY
+  // let startX
+  // let startY
 
   toolBar.addEventListener('click', (e) => {
     if (e.target.id === 'clear') {
@@ -51,7 +55,6 @@
     }
     if (e.target.id === 'save') {
       let url = canvas.toDataURL()
-
       console.log(url)
     }
   })
@@ -65,34 +68,51 @@
     }
   })
 
-  const draw = (e) => {
+  const draw = (clientX, clientY) => {
     if (!isPainting) {
       return
     }
     console.log("..")
     ctx.lineWidth = lineWidth
     ctx.lineCap = 'round'
-    ctx.lineTo(e.clientX - canvasOffsetX, e.clientY)
+    ctx.lineTo(clientX - canvasOffsetX, clientY)
     ctx.stroke()
-
   }
 
   canvas.addEventListener('mousedown', (e) => {
     console.log('hi')
     isPainting = true
-    startX = e.clientX
-    startY = e.clientY
-    ctx.beginPath()
+    //startX = e.clientX
+    //startY = e.clientY
+    //ctx.beginPath()
   })
   canvas.addEventListener('mouseup', (e => {
     console.log('lo')
+    socket.emit('mouseup')
     isPainting = false
     ctx.stroke()
-    //ctx.beginPath()
-
+    ctx.beginPath()
   }))
 
-  canvas.addEventListener('mousemove', draw)
+  canvas.addEventListener('mousemove', (e) => {
+    clientX = e.clientX
+    clientY = e.clientY
+    if (isPainting) {
+      socket.emit('collab', { clientX, clientY })
+      draw(clientX, clientY)
+    }
+  })
+  //socket events
+  socket.on('collab', ({ clientX, clientY }) => {
+    isPainting = true
+    collabPainting = true
+    draw(clientX, clientY)
+  })
+  socket.on('mouseup', () => {
+    ctx.beginPath()
+    isPainting = false
+  })
+
 </script>
 
 </html>
