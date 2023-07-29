@@ -79,29 +79,44 @@
     ctx.stroke()
   }
 
-  canvas.addEventListener('mousedown', (e) => {
-    console.log('hi')
+  const mouseDown = (e) => {
+    console.log('hhhhh')
     isPainting = true
     //startX = e.clientX
     //startY = e.clientY
     //ctx.beginPath()
-  })
-  canvas.addEventListener('mouseup', (e => {
-    console.log('lo')
+
+  }
+  const mouseUp = (e) => {
+    console.log(e)
     socket.emit('mouseup')
     isPainting = false
     ctx.stroke()
     ctx.beginPath()
-  }))
+  }
 
-  canvas.addEventListener('mousemove', (e) => {
+  const mouseMOve = (e) => {
     clientX = e.clientX
     clientY = e.clientY
+    if (e.type === 'touchmove') {
+      clientX = e.touches[0].clientX
+      clientY = e.touches[0].clientY
+    }
     if (isPainting) {
       socket.emit('collab', { clientX, clientY })
       draw(clientX, clientY)
     }
-  })
+  }
+  // mouse events
+  canvas.addEventListener('mousedown', mouseDown)
+  canvas.addEventListener('mouseup', mouseUp)
+  canvas.addEventListener('mousemove', mouseMOve)
+
+  //touch events
+  canvas.addEventListener('touchstart', mouseDown)
+  canvas.addEventListener('touchend', mouseUp)
+  canvas.addEventListener('touchmove', mouseMOve)
+
   //socket events
   socket.on('collab', ({ clientX, clientY }) => {
     isPainting = true
