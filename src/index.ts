@@ -21,11 +21,14 @@ app.get("/", (req, res) => {
 io.on("connection", (socket) => {
   console.log("user connecteed");
   socket.on("new-added", (object) => {
-    console.log('object added');
+    console.log("object added");
     socket.broadcast.emit("new-added", object);
   });
   socket.on("clear", () => {
     socket.broadcast.emit("clear");
+  });
+  socket.on("mod-obj", (object) => {
+    socket.broadcast.emit("mod-obj", object);
   });
   socket.on("disconnect", () => {
     console.log("user disconnected");

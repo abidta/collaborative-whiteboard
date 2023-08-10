@@ -1,4 +1,4 @@
-import { emitClear, emitObj } from "/javascripts/socket.js";
+import { emitClear, emitObj, emitModObj } from "/javascripts/socket.js";
 import { uid } from "/javascripts/uid.js";
 
 let object;
@@ -20,6 +20,12 @@ toolBar.addEventListener("click", (e) => {
     let url = canvas.toDataURL();
     console.log(url);
   }
+  if (e.target.id === "selection") {
+    canvas.set({ isDrawingMode: false });
+  }
+  if (e.target.id === "draw") {
+    canvas.set({ isDrawingMode: true });
+  }
 });
 
 toolBar.addEventListener("change", (e) => {
@@ -39,4 +45,8 @@ canvas.on("path:created", ({ path }) => {
   };
   console.log(window.screen);
   emitObj(object);
+});
+canvas.on("object:modified", (option) => {
+  object = { obj: option.target, id: option.target.id };
+  emitModObj(object);
 });
