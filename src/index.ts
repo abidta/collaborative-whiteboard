@@ -20,11 +20,12 @@ app.get("/", (req, res) => {
 });
 io.on("connection", (socket) => {
   console.log("user connecteed");
-  socket.on("collab", ({ clientX, clientY }) => {
-    socket.broadcast.emit("collab", { clientX, clientY });
+  socket.on("new-added", (object) => {
+    console.log('object added');
+    socket.broadcast.emit("new-added", object);
   });
-  socket.on("mouseup", (data) => {
-    socket.broadcast.emit("mouseup", data);
+  socket.on("clear", () => {
+    socket.broadcast.emit("clear");
   });
   socket.on("disconnect", () => {
     console.log("user disconnected");
