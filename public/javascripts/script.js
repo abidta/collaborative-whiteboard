@@ -43,10 +43,10 @@ canvas.on("path:created", ({ path }) => {
     obj: path,
     id: path.id,
   };
-  console.log(window.screen);
   emitObj(object);
 });
 canvas.on("object:modified", (option) => {
-  object = { obj: option.target, id: option.target.id };
+  console.log(option, "sele");
+  object.canva = canvas.toDatalessJSON();
   emitModObj(object);
 });
