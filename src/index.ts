@@ -3,7 +3,7 @@ import { engine } from "express-handlebars";
 import logger from "morgan";
 import { Server } from "socket.io";
 import { createServer } from "http";
-import socket from './socket'
+import socket from "./socket";
 
 const app: Application = express();
 const server = createServer(app);
