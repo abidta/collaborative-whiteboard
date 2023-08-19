@@ -1,7 +1,12 @@
-import { emitClear, emitObj, emitModObj , emitMousemove } from "/javascripts/socket.js";
-import { uid } from "/javascripts/uid.js";
+import {
+  emitClear,
+  emitObj,
+  emitModObj,
+  emitMousemove,
+} from "/javascripts/socket.js";
+import { uid } from "/javascripts/util.js";
 
-let object;
+let object = {};
 const toolBar = document.getElementById("tool-bar");
 
 export const canvas = new fabric.Canvas("drawing-board", {
@@ -46,15 +51,14 @@ canvas.on("path:created", ({ path }) => {
   emitObj(object);
 });
 canvas.on("object:modified", (option) => {
-  console.log(option, "sele");
   object.canva = canvas.toDatalessJSON();
   emitModObj(object);
 });
-document.addEventListener('touchmove',(e)=>{
-  let mouseObject={x:e.touches[0].clientX,y:e.touches[0].clientY}
-  emitMousemove(mouseObject)
-})
-document.addEventListener('mousemove',(e)=>{
-  let mouseObject={x:e.clientX,y:e.clientY}
-  emitMousemove(mouseObject)
-})
+document.addEventListener("touchmove", (e) => {
+  let mouseObject = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  emitMousemove(mouseObject);
+});
+document.addEventListener("mousemove", (e) => {
+  let mouseObject = { x: e.clientX, y: e.clientY };
+  emitMousemove(mouseObject);
+});
