@@ -47,3 +47,10 @@ h1 {
     color:white;
     padding: 2px;
 }
+.pointer-class{
+    background: red;
+    border-radius: 50%;
+    height: 5px;
+    width: 5px;
+    position: absolute;
+}

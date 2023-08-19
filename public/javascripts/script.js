@@ -1,4 +1,4 @@
-import { emitClear, emitObj, emitModObj } from "/javascripts/socket.js";
+import { emitClear, emitObj, emitModObj , emitMousemove } from "/javascripts/socket.js";
 import { uid } from "/javascripts/uid.js";
 
 let object;
@@ -50,3 +50,11 @@ canvas.on("object:modified", (option) => {
   object.canva = canvas.toDatalessJSON();
   emitModObj(object);
 });
+document.addEventListener('touchmove',(e)=>{
+  let mouseObject={x:e.touches[0].clientX,y:e.touches[0].clientY}
+  emitMousemove(mouseObject)
+})
+document.addEventListener('mousemove',(e)=>{
+  let mouseObject={x:e.clientX,y:e.clientY}
+  emitMousemove(mouseObject)
+})
