@@ -13,6 +13,9 @@ export default (io: any) => {
       mouseCoord.id = socket.id;
       socket.broadcast.emit("mousemove", mouseCoord);
     });
+    socket.on("undo-redo", (data: string): void => {
+      socket.broadcast.emit("undo-redo", data);
+    });
     socket.on("clear", (): void => {
       socket.broadcast.emit("clear");
     });

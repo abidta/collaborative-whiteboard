@@ -1,5 +1,5 @@
 const socket = io();
-import { canvas } from "/javascripts/script.js";
+import { canvas, undo, redo } from "/javascripts/script.js";
 import { getRandomColor } from "./util.js";
 
 let users = {};
@@ -29,7 +29,16 @@ socket.on("mousemove", (mouseCoord) => {
   users[mouseCoord.id].style.left = mouseCoord.x + "px";
   users[mouseCoord.id].style.top = mouseCoord.y + "px";
 });
-
+socket.on("undo-redo", (data) => {
+  if (data === "u") {
+    undo();
+    return;
+  }
+  if (data === "r") {
+    redo();
+    return;
+  }
+});
 socket.on("clear", () => {
   canvas.clear();
 });
@@ -43,6 +52,9 @@ export const emitModObj = (object) => {
 };
 export const emitMousemove = (mouseCoord) => {
   socket.emit("mousemove", mouseCoord);
+};
+export const emitUndoOrRedo = (data) => {
+  socket.emit("undo-redo", data);
 };
 export const emitClear = () => {
   socket.emit("clear");

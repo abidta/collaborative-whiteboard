@@ -3,11 +3,23 @@ import {
   emitObj,
   emitModObj,
   emitMousemove,
+  emitUndoOrRedo,
 } from "/javascripts/socket.js";
 import { uid } from "/javascripts/util.js";
 
 let object = {};
+let redoStack = [];
 const toolBar = document.getElementById("tool-bar");
+export const undo = () => {
+  redoStack.push(canvas._objects.pop());
+  canvas.renderAll();
+};
+export const redo = () => {
+  if (redoStack.length !== 0) {
+    canvas._objects.push(redoStack.pop());
+    canvas.renderAll();
+  }
+};
 
 export const canvas = new fabric.Canvas("drawing-board", {
   isDrawingMode: true,
@@ -32,7 +44,25 @@ toolBar.addEventListener("click", (e) => {
     canvas.set({ isDrawingMode: true });
   }
 });
-
+// event listeners
+document.addEventListener(
+  "keydown",
+  (event) => {
+    let code = event.code;
+    if (event.ctrlKey && code == "KeyZ") {
+      console.log(canvas);
+      if (canvas._objects.length !== 0) {
+        undo();
+        emitUndoOrRedo("u");
+      }
+    }
+    if (event.ctrlKey && code == "KeyY") {
+      redo();
+      emitUndoOrRedo("r");
+    }
+  },
+  false
+);
 toolBar.addEventListener("change", (e) => {
   if (e.target.id === "stroke") {
     canvas.freeDrawingBrush.color = e.target.value;
@@ -41,7 +71,15 @@ toolBar.addEventListener("change", (e) => {
     canvas.freeDrawingBrush.width = parseInt(e.target.value, 10);
   }
 });
-
+document.addEventListener("touchmove", (e) => {
+  let mouseObject = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  emitMousemove(mouseObject);
+});
+document.addEventListener("mousemove", (e) => {
+  let mouseObject = { x: e.clientX, y: e.clientY };
+  emitMousemove(mouseObject);
+});
+//canvas events
 canvas.on("path:created", ({ path }) => {
   path.set("id", uid());
   object = {
@@ -54,11 +92,4 @@ canvas.on("object:modified", (option) => {
   object.canva = canvas.toDatalessJSON();
   emitModObj(object);
 });
-document.addEventListener("touchmove", (e) => {
-  let mouseObject = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-  emitMousemove(mouseObject);
-});
-document.addEventListener("mousemove", (e) => {
-  let mouseObject = { x: e.clientX, y: e.clientY };
-  emitMousemove(mouseObject);
-});
+
