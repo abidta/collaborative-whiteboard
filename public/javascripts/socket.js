@@ -1,15 +1,23 @@
 const socket = io();
 import { canvas, undo, redo } from "/javascripts/script.js";
 import { getRandomColor } from "./util.js";
+import { createModalObj } from "./models.js";
 
 let users = {};
+let newObject;
 //listening
 socket.on("new-user", () => {
   console.log("new user");
 });
 socket.on("new-added", (object) => {
-  const { obj, id } = object;
-  let newObject = new fabric.Path(obj.path).set(obj).set({ id: id });
+  const { obj,divId, id } = object;
+  if (obj.path) {
+      newObject = new fabric.Path(obj.path).set(obj).set({ id: id });
+  }
+  else{
+    console.log(obj,"kl");
+    newObject= createModalObj(divId).set(obj)
+  }
   canvas.add(newObject);
   canvas.renderAll();
 });

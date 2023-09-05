@@ -5,14 +5,7 @@ import {
   emitMousemove,
   emitUndoOrRedo,
 } from "/javascripts/socket.js";
-import {
-  rectObj,
-  roundObj,
-  triangleObj,
-  fillRectObj,
-  fillRoundObj,
-  fillTriangleObj,
-} from "./models.js";
+import { createModalObj } from "./models.js";
 import { uid } from "/javascripts/util.js";
 
 let object = {};
@@ -26,24 +19,6 @@ let initX;
 let initY;
 const toolBar = document.getElementById("tool-bar");
 const subToolBar = document.getElementById("sub-tool");
-const createModalObj = (id) => {
-  switch (id) {
-    case "rect":
-      return rectObj();
-    case "round":
-      return roundObj();
-    case "triangle":
-      return triangleObj();
-    case "fill-rect":
-      return fillRectObj();
-    case "fill-round":
-      return fillRoundObj();
-    case "fill-triangle":
-      return fillTriangleObj();
-    default:
-      break;
-  }
-};
 const toggleActive = (element) => {
   if (
     document.querySelector(".active") &&
@@ -207,11 +182,21 @@ canvas.on("mouse:move", (option) => {
   }
 });
 canvas.on("mouse:up", () => {
-  if (newObj !== undefined && newObj.width === 0 && newObj.height === 0) {
+  if (newObj !== undefined && newObj.width === 0 && newObj.height === 0 ) {
     canvas.remove(newObj);
   }
+
+ 
   newObj = createModalObj(activeShape);
 });
-canvas.on("object:scaling", (option) => {
-  console.log(option, "selection");
+canvas.on("selection:created", (option) => {
+    if (newObj!== undefined) {
+     object = {
+    obj: newObj,
+    divId:activeShape,
+    id: null,
+  };
+  emitObj(object);
+  }
+  console.log(option, "added");
 });
