@@ -1,4 +1,23 @@
-const rectObj = () => {
+
+const createModalObj = (id) => {
+  switch (id) {
+    case "rect":
+      return rectObj();
+    case "round":
+      return roundObj();
+    case "triangle":
+      return triangleObj();
+    case "fill-rect":
+      return fillRectObj();
+    case "fill-round":
+      return fillRoundObj();
+    case "fill-triangle":
+      return fillTriangleObj();
+    default:
+      break;
+  }
+}
+;const rectObj = () => {
   return new fabric.Rect({
     fill: 0,
     stroke: "black",
@@ -51,10 +70,5 @@ const fillTriangleObj = () => {
   });
 };
 export {
-  rectObj,
-  roundObj,
-  triangleObj,
-  fillRectObj,
-  fillRoundObj,
-  fillTriangleObj,
+ createModalObj
 };
