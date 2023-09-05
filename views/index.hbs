@@ -12,23 +12,35 @@
   <section>
     <div class="container">
       <div id="tool-bar">
+        <a href="#" id="sample">kghkhgj</a>
         <h1>Draw</h1>
         <label for="stroke">Stroke</label>
         <input id="stroke" name="stroke" type="color">
+        <label for="fill">fill</label>
+        <input id="fill" name="fill" type="color">
         <label for="line-width">Line width</label>
-        <input id="line-width" name="line-width" type="number" value="5">
-        <label for="Selection">Selection</label>
+        <input id="line-width" name="line-width" type="number" value="2">
+        <label for="Selection">Tools</label>
         <div class="tools">
-          <img src="/images/icons8-selection-64.png" style="background-color: white;" id="selection" alt="" height="20"
-            width="20">
-          <img src="/images/icons8-drawing-24.png" style="background-color: white;" id="draw" alt="" height="20"
-            width="20">
+          <img src="/images/icons8-selection-64.png" style="filter:invert()" id="selection" alt="">
+          <img src="/images/icons8-drawing-24.png" style="filter:invert()" id="draw" alt="">
+          <img src="/images/icons8-diversity-48.png" id="shapes" alt="">
+          <img src="/images/icons8-undo-48.png" alt="" id="undo">
+          <img src="/images/icons8-redo-48.png" alt="" id="redo">
         </div>
         <button id="clear">Clear</button>
         <button id="save">Save</button>
       </div>
+      <div id="sub-tool" style="display: none; ">
+        <img src="/images/sub-tools/icons8-rectangle-48.png" id="rect">
+        <img src="/images/sub-tools/icons8-round-48.png" id="round" alt="">
+        <img src="/images/sub-tools/icons8-triangle-48.png" id="triangle" alt="">
+        <img src="/images/sub-tools/icons8-rectangle-48-fill.png" id="fill-rect" alt="">
+        <img src="/images/sub-tools/icons8-round-48-fill.png" id="fill-round">
+        <img src="/images/sub-tools/icons8-triangle-48-fill.png" id="fill-triangle" alt="">
+      </div>
       <div class="drawing-board">
-        <canvas id="drawing-board">
+        <canvas id="drawing-board" style=";">
         </canvas>
       </div>
     </div>
@@ -44,4 +56,5 @@
   }
 </script>
 <script type="module" src="/javascripts/script.js"></script>
+
 </html>

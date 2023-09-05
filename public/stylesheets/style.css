@@ -41,11 +41,37 @@ h1 {
 }
 
 #tool-bar button {
-  background-color: #1565c0;
+  background-color: #15acc0;
   border: none;
   border-radius: 4px;
   color: white;
   padding: 2px;
+}
+#tool-bar img {
+  height: 20px;
+  width: 20px;
+}
+#tool-bar img:hover {
+  border-radius: 6px;
+  background-color: #4e5e60;
+}
+#sample:target {
+  background-color: #4e5e60;
+}
+#sub-tool {
+  margin: 100px 80px;
+  z-index: 1;
+  border-radius: 6px;
+  position: absolute;
+  flex-direction: column;
+  padding: 5px;
+  width: fit-content;
+  height: fit-content;
+  background-color: #202020;
+}
+#sub-tool img:hover {
+  border-radius: 6px;
+  background-color: #4e5e60;
 }
 .pointer-class {
   border-radius: 50%;
@@ -59,6 +85,10 @@ h1 {
             animation-direction: alternate;
             animation-iteration-count: infinite;
             animation-play-state: running; */
+}
+.active {
+  background-color: #4e5e60;
+  border-radius: 6px;
 }
 @keyframes stretch {
   0% {

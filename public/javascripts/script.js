@@ -5,14 +5,59 @@ import {
   emitMousemove,
   emitUndoOrRedo,
 } from "/javascripts/socket.js";
+import {
+  rectObj,
+  roundObj,
+  triangleObj,
+  fillRectObj,
+  fillRoundObj,
+  fillTriangleObj,
+} from "./models.js";
 import { uid } from "/javascripts/util.js";
 
 let object = {};
 let redoStack = [];
+let strokeWidth = 2;
+let strokeColor = "#000000";
+let fillColor = "#000000";
+let newObj;
+let activeShape;
+let initX;
+let initY;
 const toolBar = document.getElementById("tool-bar");
+const subToolBar = document.getElementById("sub-tool");
+const createModalObj = (id) => {
+  switch (id) {
+    case "rect":
+      return rectObj();
+    case "round":
+      return roundObj();
+    case "triangle":
+      return triangleObj();
+    case "fill-rect":
+      return fillRectObj();
+    case "fill-round":
+      return fillRoundObj();
+    case "fill-triangle":
+      return fillTriangleObj();
+    default:
+      break;
+  }
+};
+const toggleActive = (element) => {
+  if (
+    document.querySelector(".active") &&
+    element != document.querySelector(".active")
+  ) {
+    document.querySelector(".active").classList.remove("active");
+  }
+  element.classList.toggle("active");
+};
 export const undo = () => {
-  redoStack.push(canvas._objects.pop());
-  canvas.renderAll();
+  if (canvas._objects.length !== 0) {
+    redoStack.push(canvas._objects.pop());
+    canvas.renderAll();
+  }
 };
 export const redo = () => {
   if (redoStack.length !== 0) {
@@ -26,25 +71,57 @@ export const canvas = new fabric.Canvas("drawing-board", {
   height: screen.availHeight,
   width: screen.availWidth,
 });
-canvas.freeDrawingBrush.width = 5;
-canvas.freeDrawingBrush.color = "#000000";
+canvas.freeDrawingBrush.width = strokeWidth;
+canvas.freeDrawingBrush.color = strokeColor;
+// event listeners
 toolBar.addEventListener("click", (e) => {
   if (e.target.id === "clear") {
     canvas.clear();
     emitClear();
   }
   if (e.target.id === "save") {
+    console.log(e.target.value);
     let url = canvas.toDataURL();
-    console.log(url);
+    // console.log(url);
   }
   if (e.target.id === "selection") {
     canvas.set({ isDrawingMode: false });
+    activeShape = null;
+    toggleActive(e.target);
   }
   if (e.target.id === "draw") {
     canvas.set({ isDrawingMode: true });
+    toggleActive(e.target);
+  }
+  if (e.target.id === "undo") {
+    undo();
+    emitUndoOrRedo("u");
+  }
+  if (e.target.id === "redo") {
+    redo();
+    emitUndoOrRedo("r");
+  }
+  if (e.target.id === "shapes") {
+    let subTools = document.getElementById("sub-tool");
+    console.log(subTools);
+    if (subTools.style.display === "none") {
+      subTools.style.display = "flex";
+    } else {
+      subTools.style.display = "none";
+    }
   }
 });
-// event listeners
+toolBar.addEventListener("change", (e) => {
+  if (e.target.id === "stroke") {
+    canvas.freeDrawingBrush.color = strokeColor = e.target.value;
+  }
+  if (e.target.id === "fill") {
+    fillColor = e.target.value;
+  }
+  if (e.target.id === "line-width") {
+    canvas.freeDrawingBrush.width = strokeWidth = parseInt(e.target.value, 10);
+  }
+});
 document.addEventListener(
   "keydown",
   (event) => {
@@ -63,12 +140,11 @@ document.addEventListener(
   },
   false
 );
-toolBar.addEventListener("change", (e) => {
-  if (e.target.id === "stroke") {
-    canvas.freeDrawingBrush.color = e.target.value;
-  }
-  if (e.target.id === "line-width") {
-    canvas.freeDrawingBrush.width = parseInt(e.target.value, 10);
+subToolBar.addEventListener("click", (e) => {
+  if (e.target.id && e.target.id !== "sub-tool") {
+    canvas.set({ isDrawingMode: false });
+    activeShape = e.target.id;
+    toggleActive(e.target);
   }
 });
 document.addEventListener("touchmove", (e) => {
@@ -92,4 +168,50 @@ canvas.on("object:modified", (option) => {
   object.canva = canvas.toDatalessJSON();
   emitModObj(object);
 });
-
+canvas.on("mouse:down", (option) => {
+  if (option.target == null && !canvas.isDrawingMode) {
+    initX = option.pointer.x;
+    initY = option.pointer.y;
+    newObj = createModalObj(activeShape);
+    if (newObj != undefined) {
+      if (newObj.fill !== 0) {
+        newObj.set({ fill: fillColor });
+      }
+      canvas.add(
+        newObj.set({
+          left: option.pointer.x,
+          top: option.pointer.y,
+          strokeWidth: strokeWidth,
+          stroke: strokeColor,
+        })
+      );
+    }
+  }
+});
+canvas.on("mouse:move", (option) => {
+  if (newObj != null) {
+    newObj.set({
+      width: Math.abs(initX - option.pointer.x),
+      height: Math.abs(initY - option.pointer.y),
+    });
+    newObj.set({ left: Math.min(option.pointer.x, initX) });
+    newObj.set({ top: Math.min(option.pointer.y, initY) });
+    if (activeShape === "round" || activeShape === "fill-round") {
+      newObj.set({
+        rx: Math.abs((initX - option.pointer.x) / 2),
+        ry: Math.abs((initY - option.pointer.y) / 2),
+      });
+    }
+    newObj.setCoords();
+    canvas.renderAll();
+  }
+});
+canvas.on("mouse:up", () => {
+  if (newObj !== undefined && newObj.width === 0 && newObj.height === 0) {
+    canvas.remove(newObj);
+  }
+  newObj = createModalObj(activeShape);
+});
+canvas.on("object:scaling", (option) => {
+  console.log(option, "selection");
+});
