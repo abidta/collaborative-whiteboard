@@ -1,9 +1,10 @@
 # syntax=docker/dockerfile:1
    
 FROM node:18-alpine
-WORKDIR /app
-COPY . .
+WORKDIR /project/whiteboard
+COPY package*.json ./
 RUN npm install
-RUN npm build
+COPY . .
+RUN npm run build
 CMD ["node", "dist/index.js"]
 EXPOSE 3000
