@@ -49,6 +49,14 @@ export const canvas = new fabric.Canvas("drawing-board", {
 canvas.freeDrawingBrush.width = strokeWidth;
 canvas.freeDrawingBrush.color = strokeColor;
 // event listeners
+window.onclick = (e) => {
+  if (!e.target.matches(".dropbtn")) {
+    let dropdown = document.getElementById("content-drop");
+    if (dropdown.classList.contains("show")) {
+      dropdown.classList.remove("show");
+    }
+  }
+};
 toolBar.addEventListener("click", (e) => {
   if (e.target.id === "clear") {
     canvas.clear();
@@ -130,6 +138,9 @@ document.addEventListener("mousemove", (e) => {
   let mouseObject = { x: e.clientX, y: e.clientY };
   emitMousemove(mouseObject);
 });
+document.addEventListener("click", (e) => {
+  document.getElementById("content-drop").classList.toggle("show");
+});
 //canvas events
 canvas.on("path:created", ({ path }) => {
   path.set("id", uid());
@@ -182,21 +193,20 @@ canvas.on("mouse:move", (option) => {
   }
 });
 canvas.on("mouse:up", () => {
-  if (newObj !== undefined && newObj.width === 0 && newObj.height === 0 ) {
+  if (newObj !== undefined && newObj.width === 0 && newObj.height === 0) {
     canvas.remove(newObj);
   }
 
- 
   newObj = createModalObj(activeShape);
 });
 canvas.on("selection:created", (option) => {
-    if (newObj!== undefined) {
-     object = {
-    obj: newObj,
-    divId:activeShape,
-    id: null,
-  };
-  emitObj(object);
+  if (newObj !== undefined) {
+    object = {
+      obj: newObj,
+      divId: activeShape,
+      id: null,
+    };
+    emitObj(object);
   }
   console.log(option, "added");
 });

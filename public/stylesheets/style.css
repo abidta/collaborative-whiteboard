@@ -87,6 +87,40 @@ h1 {
   background-color: #4e5e60;
   border-radius: 6px;
 }
+/* drop down- online members */
+.dropdown {
+  float: right;
+  position: relative;
+  /* display: inline-block; */
+  margin: 20px;
+  border: 1px;
+  border-radius: 6px;
+}
+.dropbtn{
+  color: black;
+  padding: 4px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  z-index: 2;
+}
+.dropbtn:hover, .dropbtn:focus {
+  background-color: #e6e6e6;
+}
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #000000;
+  min-width: 160px;
+  overflow: auto;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  right: 0;
+  z-index: 1;
+}
+.show {display: block;}
+
 @keyframes stretch {
   0% {
     opacity: 0.2;

@@ -5,18 +5,28 @@ import { createModalObj } from "./models.js";
 
 let users = {};
 let newObject;
+
+const updateOnline = (count) => {
+  document.getElementById("online-count").innerHTML = count;
+};
 //listening
-socket.on("new-user", () => {
+socket.on("new-user", (userCount) => {
   console.log("new user");
+  updateOnline(userCount);
+});
+socket.on("disconnect-user", (userCount, id) => {
+  updateOnline(userCount);
+  //for delete div element on mousemove while disconnect user
+  users[id].remove();
+  delete users[id];
 });
 socket.on("new-added", (object) => {
-  const { obj,divId, id } = object;
+  const { obj, divId, id } = object;
   if (obj.path) {
-      newObject = new fabric.Path(obj.path).set(obj).set({ id: id });
-  }
-  else{
-    console.log(obj,"kl");
-    newObject= createModalObj(divId).set(obj)
+    newObject = new fabric.Path(obj.path).set(obj).set({ id: id });
+  } else {
+    console.log(obj, "kl");
+    newObject = createModalObj(divId).set(obj);
   }
   canvas.add(newObject);
   canvas.renderAll();
