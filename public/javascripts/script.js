@@ -15,6 +15,7 @@ let strokeColor = "#000000";
 let fillColor = "#000000";
 let newObj;
 let activeShape;
+let activeObj;
 let initX;
 let initY;
 const toolBar = document.getElementById("tool-bar");
@@ -25,6 +26,9 @@ const toggleActive = (element) => {
     element != document.querySelector(".active")
   ) {
     document.querySelector(".active").classList.remove("active");
+  }
+  if (element.id !== "draw") {
+    canvas.set({ isDrawingMode: false });
   }
   element.classList.toggle("active");
 };
@@ -93,6 +97,10 @@ toolBar.addEventListener("click", (e) => {
       subTools.style.display = "none";
     }
   }
+  if (e.target.id === "text") {
+    activeShape = e.target.id;
+    toggleActive(e.target);
+  }
 });
 toolBar.addEventListener("change", (e) => {
   if (e.target.id === "stroke") {
@@ -154,8 +162,17 @@ canvas.on("object:modified", (option) => {
   object.canva = canvas.toDatalessJSON();
   emitModObj(object);
 });
+canvas.on("mouse:down:before", (option) => {
+  if (canvas.getActiveObject()) {
+    activeObj = true;
+    return;
+  } else {
+    activeObj = false;
+  }
+});
 canvas.on("mouse:down", (option) => {
-  if (option.target == null && !canvas.isDrawingMode) {
+  console.log(option.active, "op");
+  if (option.target == null && !canvas.isDrawingMode && !activeObj) {
     initX = option.pointer.x;
     initY = option.pointer.y;
     newObj = createModalObj(activeShape);
@@ -163,12 +180,16 @@ canvas.on("mouse:down", (option) => {
       if (newObj.fill !== 0) {
         newObj.set({ fill: fillColor });
       }
+      if (newObj.type !== "i-text") {
+        newObj.set({
+          strokeWidth: strokeWidth,
+          stroke: strokeColor,
+        });
+      }
       canvas.add(
         newObj.set({
           left: option.pointer.x,
           top: option.pointer.y,
-          strokeWidth: strokeWidth,
-          stroke: strokeColor,
         })
       );
     }

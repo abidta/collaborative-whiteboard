@@ -17,8 +17,10 @@ socket.on("new-user", (userCount) => {
 socket.on("disconnect-user", (userCount, id) => {
   updateOnline(userCount);
   //for delete div element on mousemove while disconnect user
-  users[id].remove();
-  delete users[id];
+  if (users[id]) {
+    users[id].remove();
+    delete users[id];
+  }
 });
 socket.on("new-added", (object) => {
   const { obj, divId, id } = object;

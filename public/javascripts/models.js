@@ -1,5 +1,5 @@
 
-const createModalObj = (id) => {
+const createModalObj = (id,data) => {
   switch (id) {
     case "rect":
       return rectObj();
@@ -13,6 +13,8 @@ const createModalObj = (id) => {
       return fillRoundObj();
     case "fill-triangle":
       return fillTriangleObj();
+      case "text":
+        return textObj(data)
     default:
       break;
   }
@@ -69,6 +71,11 @@ const fillTriangleObj = () => {
     height: 0,
   });
 };
+const textObj=(text)=>{
+  return new fabric.IText("text",{
+  color:'red'
+  })
+}
 export {
  createModalObj
 };
