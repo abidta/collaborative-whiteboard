@@ -5,7 +5,7 @@ export const addUser = (id: any) => {
 export const getUser = () => {
   return users;
 };
-export const getUserCount = (): any => {
+export const getUserCount = (): number => {
   return users.length;
 };
 export const deleteUser = (id: any) => {

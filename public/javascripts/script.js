@@ -8,7 +8,11 @@ import {
 import { createModalObj } from "./models.js";
 import { uid } from "/javascripts/util.js";
 
-let object = {};
+let canvasEmitObject = {
+  obj: "",
+  divId: "",
+  id: null,
+};
 let redoStack = [];
 let strokeWidth = 2;
 let strokeColor = "#000000";
@@ -131,6 +135,8 @@ document.addEventListener(
   },
   false
 );
+
+//add shapes to activeShape
 subToolBar.addEventListener("click", (e) => {
   if (e.target.id && e.target.id !== "sub-tool") {
     canvas.set({ isDrawingMode: false });
@@ -152,17 +158,19 @@ document.addEventListener("click", (e) => {
 //canvas events
 canvas.on("path:created", ({ path }) => {
   path.set("id", uid());
-  object = {
+  canvasEmitObject = {
     obj: path,
     id: path.id,
   };
-  emitObj(object);
+  emitObj(canvasEmitObject);
 });
 canvas.on("object:modified", (option) => {
-  object.canva = canvas.toDatalessJSON();
-  emitModObj(object);
+  console.log("modified");
+  //object.canva = canvas.toDatalessJSON();
+  emitModObj({ canva: canvas.toDatalessJSON() });
 });
 canvas.on("mouse:down:before", (option) => {
+  console.log(option, "bfore mouse");
   if (canvas.getActiveObject()) {
     activeObj = true;
     return;
@@ -171,8 +179,11 @@ canvas.on("mouse:down:before", (option) => {
   }
 });
 canvas.on("mouse:down", (option) => {
-  console.log(option.active, "op");
-  if (option.target == null && !canvas.isDrawingMode && !activeObj) {
+  console.log(option, "op");
+  if (option.target == null && !canvas.isDrawingMode) {
+    if (activeShape === "text" && activeObj) {
+      return;
+    }
     initX = option.pointer.x;
     initY = option.pointer.y;
     newObj = createModalObj(activeShape);
@@ -180,7 +191,7 @@ canvas.on("mouse:down", (option) => {
       if (newObj.fill !== 0) {
         newObj.set({ fill: fillColor });
       }
-      if (newObj.type !== "i-text") {
+      if (true) {
         newObj.set({
           strokeWidth: strokeWidth,
           stroke: strokeColor,
@@ -188,15 +199,17 @@ canvas.on("mouse:down", (option) => {
       }
       canvas.add(
         newObj.set({
-          left: option.pointer.x,
-          top: option.pointer.y,
+          left:
+            activeShape === "text" ? option.pointer.x - 30 : option.pointer.x,
+          top:
+            activeShape === "text" ? option.pointer.y - 20 : option.pointer.y,
         })
       );
     }
   }
 });
 canvas.on("mouse:move", (option) => {
-  if (newObj != null) {
+  if (newObj != null && activeShape !== "text") {
     newObj.set({
       width: Math.abs(initX - option.pointer.x),
       height: Math.abs(initY - option.pointer.y),
@@ -214,20 +227,33 @@ canvas.on("mouse:move", (option) => {
   }
 });
 canvas.on("mouse:up", () => {
-  if (newObj !== undefined && newObj.width === 0 && newObj.height === 0) {
+  if (newObj !== undefined && newObj.width < 5 && newObj.height < 5) {
     canvas.remove(newObj);
   }
-
-  newObj = createModalObj(activeShape);
+  if (activeShape === "text" && newObj !== undefined) {
+    emitObj({
+      obj: newObj,
+      divId: activeShape,
+      id: null,
+    });
+  }
+  console.log("first");
+  newObj = undefined;
 });
 canvas.on("selection:created", (option) => {
+  console.log("second", option);
+
   if (newObj !== undefined) {
-    object = {
+    if (newObj.left < 0 || newObj.top < 0) {
+      emitModObj({ canva: canvas.toDatalessJSON() });
+      return;
+    }
+    canvasEmitObject = {
       obj: newObj,
       divId: activeShape,
       id: null,
     };
-    emitObj(object);
+    emitObj(canvasEmitObject);
   }
   console.log(option, "added");
 });
