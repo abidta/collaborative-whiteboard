@@ -73,7 +73,8 @@ const fillTriangleObj = () => {
 };
 const textObj=(text)=>{
   return new fabric.IText("text",{
-  color:'red'
+    top:150,
+    left:150
   })
 }
 export {

@@ -24,10 +24,11 @@ socket.on("disconnect-user", (userCount, id) => {
 });
 socket.on("new-added", (object) => {
   const { obj, divId, id } = object;
-  if (obj.path) {
+  if (obj?.path) {
     newObject = new fabric.Path(obj.path).set(obj).set({ id: id });
   } else {
-    console.log(obj, "kl");
+   // console.log(obj.top,obj.left, "obj topleft");
+   // console.log(top,left,'calculated top left');
     newObject = createModalObj(divId).set(obj);
   }
   canvas.add(newObject);
