@@ -21,7 +21,7 @@ app.use("/", indexRouter);
 app.engine(".hbs", engine({ extname: ".hbs", defaultLayout: false }));
 app.set("views", "./views");
 app.set("view engine", "hbs");
-
+//@ts-expect-error
 server.listen(PORT, HOST, () =>
   console.log(`Server listenning in ${PORT}`)
 );
