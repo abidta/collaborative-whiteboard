@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 
 const createModalObj = (id,data) => {
   switch (id) {
@@ -75,6 +76,7 @@ const textObj=(text)=>{
   return new fabric.IText("text",{
     top:150,
     left:150
+
   })
 }
 export {

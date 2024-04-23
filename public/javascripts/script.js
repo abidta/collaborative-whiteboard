@@ -24,6 +24,7 @@ let initX;
 let initY;
 const toolBar = document.getElementById("tool-bar");
 const subToolBar = document.getElementById("sub-tool");
+const saveBtn = document.getElementById("save");
 const toggleActive = (element) => {
   if (
     document.querySelector(".active") &&
@@ -70,11 +71,6 @@ toolBar.addEventListener("click", (e) => {
     canvas.clear();
     emitClear();
   }
-  if (e.target.id === "save") {
-    console.log(e.target.value);
-    let url = canvas.toDataURL();
-    // console.log(url);
-  }
   if (e.target.id === "selection") {
     canvas.set({ isDrawingMode: false });
     activeShape = null;
@@ -117,6 +113,16 @@ toolBar.addEventListener("change", (e) => {
     canvas.freeDrawingBrush.width = strokeWidth = parseInt(e.target.value, 10);
   }
 });
+//save btn event
+saveBtn.addEventListener("click", function () {
+  const dLink = document.createElement("a");
+  dLink.href = canvas.toDataURL({ format: "png" });
+  dLink.download = "canva.png";
+  document.body.appendChild(dLink);
+  dLink.click();
+  document.body.removeChild(dLink);
+});
+
 document.addEventListener(
   "keydown",
   (event) => {
