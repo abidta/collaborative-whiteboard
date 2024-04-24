@@ -5,11 +5,11 @@ import { Server } from "socket.io";
 import { createServer } from "http";
 import socket from "./socket";
 import indexRouter from "./routes/indexRouter";
-
+ 
 const app: Application = express();
 const server = createServer(app);
 const io = new Server(server);
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000; 
 const HOST: string = "";
 socket(io);
 
@@ -22,6 +22,6 @@ app.engine(".hbs", engine({ extname: ".hbs", defaultLayout: false }));
 app.set("views", "./views");
 app.set("view engine", "hbs");
 
-server.listen(PORT, HOST, () =>
+server.listen(PORT, HOST, (): void =>
   console.log(`Server listenning in ${PORT}`)
 );

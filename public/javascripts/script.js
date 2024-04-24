@@ -109,19 +109,16 @@ toolBar.addEventListener("change", (e) => {
   if (e.target.id === "fill") {
     fillColor = e.target.value;
   }
-  if (e.target.id === 'canvas-bg') {
-    canvas.set({backgroundColor: e.target.value})
-    canvas.renderCanvas()
+  if (e.target.id === "canvas-bg") {
+    canvas.set({ backgroundColor: e.target.value });
   }
   if (e.target.id === "line-width") {
-    if (e.target.value > 100) {
-      e.target.value = 2
-     return  alert('line width sould be <=100')
-       
+    if (e.target.value > 100 || e.target.value < 1) {
+      e.target.value = 2;
+      return alert("line width sould be <=100 || >=1");
     }
     canvas.freeDrawingBrush.width = strokeWidth = parseInt(e.target.value, 10);
   }
-  
 });
 //save btn event
 saveBtn.addEventListener("click", function () {
@@ -207,12 +204,12 @@ canvas.on("mouse:down", (option) => {
       if (newObj.fill !== 0) {
         newObj.set({ fill: fillColor });
       }
-      if (true) {
-        newObj.set({
-          strokeWidth: strokeWidth,
-          stroke: strokeColor,
-        });
-      }
+
+      newObj.set({
+        strokeWidth: strokeWidth,
+        stroke: strokeColor,
+      });
+
       canvas.add(
         newObj.set({
           left:
