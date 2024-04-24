@@ -25,6 +25,8 @@ let initY;
 const toolBar = document.getElementById("tool-bar");
 const subToolBar = document.getElementById("sub-tool");
 const saveBtn = document.getElementById("save");
+
+//toggle active tool for styling. and checking canvas is drawing mode or not
 const toggleActive = (element) => {
   if (
     document.querySelector(".active") &&
@@ -37,12 +39,16 @@ const toggleActive = (element) => {
   }
   element.classList.toggle("active");
 };
+
+//undo function
 export const undo = () => {
   if (canvas._objects.length !== 0) {
     redoStack.push(canvas._objects.pop());
     canvas.renderAll();
   }
 };
+
+//redo function
 export const redo = () => {
   if (redoStack.length !== 0) {
     canvas._objects.push(redoStack.pop());
@@ -50,6 +56,7 @@ export const redo = () => {
   }
 };
 
+//init new canvas
 export const canvas = new fabric.Canvas("drawing-board", {
   isDrawingMode: true,
   height: screen.availHeight,
@@ -57,7 +64,15 @@ export const canvas = new fabric.Canvas("drawing-board", {
 });
 canvas.freeDrawingBrush.width = strokeWidth;
 canvas.freeDrawingBrush.color = strokeColor;
-// event listeners
+
+/**
+ *
+ * 
+ * **********************   Event Listeners.    ****************
+ * 
+ */
+
+//this for hide online dropdown when click anywhere in th window
 window.onclick = (e) => {
   if (!e.target.matches(".dropbtn")) {
     let dropdown = document.getElementById("content-drop");
@@ -66,6 +81,8 @@ window.onclick = (e) => {
     }
   }
 };
+
+// Toolbar listeners
 toolBar.addEventListener("click", (e) => {
   if (e.target.id === "clear") {
     canvas.clear();
@@ -102,15 +119,19 @@ toolBar.addEventListener("click", (e) => {
     toggleActive(e.target);
   }
 });
-toolBar.addEventListener("change", (e) => {
+
+//tool bar input events. colors and line width
+toolBar.addEventListener("input", (e) => {
   if (e.target.id === "stroke") {
     canvas.freeDrawingBrush.color = strokeColor = e.target.value;
+    canvas.renderAll();
   }
   if (e.target.id === "fill") {
     fillColor = e.target.value;
   }
   if (e.target.id === "canvas-bg") {
     canvas.set({ backgroundColor: e.target.value });
+    canvas.renderAll();
   }
   if (e.target.id === "line-width") {
     if (e.target.value > 100 || e.target.value < 1) {
@@ -120,6 +141,7 @@ toolBar.addEventListener("change", (e) => {
     canvas.freeDrawingBrush.width = strokeWidth = parseInt(e.target.value, 10);
   }
 });
+
 //save btn event
 saveBtn.addEventListener("click", function () {
   const dLink = document.createElement("a");
@@ -130,6 +152,7 @@ saveBtn.addEventListener("click", function () {
   document.body.removeChild(dLink);
 });
 
+// This event for key down (ctrl+z for undo, ctrl+y fo redo)
 document.addEventListener(
   "keydown",
   (event) => {
@@ -157,6 +180,8 @@ subToolBar.addEventListener("click", (e) => {
     toggleActive(e.target);
   }
 });
+
+// Mouse and touch move events for realtime mousecoords
 document.addEventListener("touchmove", (e) => {
   let mouseObject = { x: e.touches[0].clientX, y: e.touches[0].clientY };
   emitMousemove(mouseObject);
@@ -165,10 +190,16 @@ document.addEventListener("mousemove", (e) => {
   let mouseObject = { x: e.clientX, y: e.clientY };
   emitMousemove(mouseObject);
 });
-document.addEventListener("click", (e) => {
+
+//
+document.addEventListener("click", () => {
+  console.log('hii');
   document.getElementById("content-drop").classList.toggle("show");
 });
-//canvas events
+
+/**
+ ***************    Canvas Events     ******************
+ */
 canvas.on("path:created", ({ path }) => {
   path.set("id", uid());
   canvasEmitObject = {
@@ -177,7 +208,7 @@ canvas.on("path:created", ({ path }) => {
   };
   emitObj(canvasEmitObject);
 });
-canvas.on("object:modified", (option) => {
+canvas.on("object:modified", () => {
   console.log("modified");
   //object.canva = canvas.toDatalessJSON();
   emitModObj({ canva: canvas.toDatalessJSON() });
