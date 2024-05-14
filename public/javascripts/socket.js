@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-undef
 const socket = io();
 import { canvas, undo, redo } from "/javascripts/script.js";
 import { getRandomColor } from "./util.js";
@@ -25,6 +26,7 @@ socket.on("disconnect-user", (userCount, id) => {
 socket.on("new-added", (object) => {
   const { obj, divId, id } = object;
   if (obj?.path) {
+    // eslint-disable-next-line no-undef
     newObject = new fabric.Path(obj.path).set(obj).set({ id: id });
   } else {
    // console.log(obj.top,obj.left, "obj topleft");

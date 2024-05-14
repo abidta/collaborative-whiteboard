@@ -57,6 +57,7 @@ export const redo = () => {
 };
 
 //init new canvas
+// eslint-disable-next-line no-undef
 export const canvas = new fabric.Canvas("drawing-board", {
   isDrawingMode: true,
   height: screen.availHeight,
