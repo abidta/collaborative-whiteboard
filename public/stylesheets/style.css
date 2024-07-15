@@ -21,6 +21,7 @@ h1 {
 }
 
 #tool-bar {
+  transition: opacity 500ms;
   display: flex;
   flex-direction: column;
   padding: 5px;
@@ -29,6 +30,13 @@ h1 {
   position: fixed;
   height: 100%;
   z-index: 1;
+  opacity: 1;
+}
+
+#tool-bar.hidden {
+  opacity: 0;
+  /* width: 0; */
+  pointer-events: none;
 }
 
 #tool-bar * {
@@ -99,7 +107,7 @@ h1 {
   border: 1px;
   border-radius: 6px;
 }
-.dropbtn{
+.dropbtn {
   color: black;
   padding: 4px;
   font-size: 16px;
@@ -109,7 +117,8 @@ h1 {
   position: relative;
   z-index: 2;
 }
-.dropbtn:hover, .dropbtn:focus {
+.dropbtn:hover,
+.dropbtn:focus {
   background-color: #e6e6e6;
 }
 .dropdown-content {
@@ -118,11 +127,13 @@ h1 {
   background-color: #000000;
   min-width: 160px;
   overflow: auto;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   right: 0;
   z-index: 1;
 }
-.show {display: block;}
+.show {
+  display: block;
+}
 
 @keyframes stretch {
   0% {
@@ -138,4 +149,21 @@ h1 {
   100% {
     background-color: red;
   }
+}
+
+#toggle-btn {
+  position: absolute;
+  border: none;
+  background-color: gray;
+  background-color: transparent;
+  left: 0;
+  z-index: 10;
+  display: none;
+}
+
+#toggle-btn.hidden {
+  display: none;
+}
+#toggle-btn.show {
+  display: block;
 }
