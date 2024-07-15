@@ -1,52 +1,63 @@
-<!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <link rel="stylesheet" href="stylesheets/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WhiteBoard</title>
+  <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <link rel="stylesheet" href="stylesheets/style.css" />
 </head>
 
 <body>
   <div class="dropdown">
-    <button id="btn-dropdown" class="dropbtn">Online : <span id="online-count"></span></button>
+    <button id="btn-dropdown" class="dropbtn">Online :
+      <span id="online-count"></span></button>
     <div id="content-drop" class="dropdown-content">
       <li>soon😊</li>
     </div>
   </div>
   <section>
+    <button id="toggle-btn">
+      <svg style="height: 24px; width: 24px;" xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24"
+        stroke-width="1.5" stroke="currentColor" class="size-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+      </svg>
+    </button>
     <div class="container-toolbar">
       <div id="tool-bar">
+
         <h1>Draw</h1>
         <label for="stroke">Stroke</label>
-        <input id="stroke" name="stroke" type="color">
+        <input id="stroke" name="stroke" type="color" />
         <label for="fill">fill</label>
-        <input id="fill" name="fill" type="color">
+        <input id="fill" name="fill" type="color" />
         <label for="canvas-bg">background</label>
-        <input id="canvas-bg" name="canvas-bg" type="color" title="Canvas Background color">
+        <input id="canvas-bg" name="canvas-bg" type="color" title="Canvas Background color" />
         <label for="line-width">Line width</label>
-        <input id="line-width" name="line-width" type="number" value="2">
+        <input id="line-width" name="line-width" type="number" value="2" />
         <label for="Selection">Tools</label>
         <div class="tools">
           <img src="/images/icons8-selection-64.png" style="filter:invert()" id="selection" alt=""
-            title="Selection Tool">
-          <img src="/images/icons8-drawing-24.png" style="filter:invert()" id="draw" alt="" title="Drawing">
-          <img src="/images/icons8-diversity-48.png" id="shapes" alt="" title="Shapes">
-          <img src="/images/icons8-text-48.png" id="text" alt="" title="Text">
-          <img src="/images/icons8-undo-48.png" alt="" id="undo" title="Undo">
-          <img src="/images/icons8-redo-48.png" alt="" id="redo" title="Redo">
+            title="Selection Tool" />
+          <img src="/images/icons8-drawing-24.png" style="filter:invert()" id="draw" alt="" title="Drawing" />
+          <img src="/images/icons8-diversity-48.png" id="shapes" alt="" title="Shapes" />
+          <img src="/images/icons8-text-48.png" id="text" alt="" title="Text" />
+          <img src="/images/icons8-undo-48.png" alt="" id="undo" title="Undo" />
+          <img src="/images/icons8-redo-48.png" alt="" id="redo" title="Redo" />
         </div>
         <button id="clear">Clear</button>
         <button id="save">Save</button>
       </div>
       <div id="sub-tool" style="display: none; ">
-        <img src="/images/sub-tools/icons8-rectangle-48.png" id="rect" title="Rectangle">
-        <img src="/images/sub-tools/icons8-round-48.png" id="round" alt="" title="Circle">
-        <img src="/images/sub-tools/icons8-triangle-48.png" id="triangle" alt="" title="Triangle">
-        <img src="/images/sub-tools/icons8-rectangle-48-fill.png" id="fill-rect" alt="" title="Filled Rectangle">
-        <img src="/images/sub-tools/icons8-round-48-fill.png" id="fill-round" title="Filled Circle">
-        <img src="/images/sub-tools/icons8-triangle-48-fill.png" id="fill-triangle" alt="" title="Filled Triangle">
+        <img src="/images/sub-tools/icons8-rectangle-48.png" id="rect" title="Rectangle" />
+        <img src="/images/sub-tools/icons8-round-48.png" id="round" alt="" title="Circle" />
+        <img src="/images/sub-tools/icons8-triangle-48.png" id="triangle" alt="" title="Triangle" />
+        <img src="/images/sub-tools/icons8-rectangle-48-fill.png" id="fill-rect" alt="" title="Filled Rectangle" />
+        <img src="/images/sub-tools/icons8-round-48-fill.png" id="fill-round" title="Filled Circle" />
+        <img src="/images/sub-tools/icons8-triangle-48-fill.png" id="fill-triangle" alt="" title="Filled Triangle" />
       </div>
       <div class="drawing-board">
         <canvas id="drawing-board">
@@ -60,12 +71,9 @@
   integrity="sha512-CeIsOAsgJnmevfCi2C7Zsyy6bQKi43utIjdA87Q0ZY84oDqnI0uwfM9+bKiIkI75lUeI00WG/+uJzOmuHlesMA=="
   crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script type="impoprtmap">
-  { "imports":{
-    "socket":"/javascripts/socket.js",
-    "uid" : "/javascripts/uid.js"
-  }
-  }
-</script>
+    { "imports":{ "socket":"/javascripts/socket.js", "uid" :
+    "/javascripts/uid.js" } }
+  </script>
 <script type="module" src="/javascripts/script.js"></script>
 
 </html>

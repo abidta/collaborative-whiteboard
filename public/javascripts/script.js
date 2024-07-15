@@ -57,6 +57,7 @@ export const redo = () => {
 };
 
 //init new canvas
+// eslint-disable-next-line no-undef
 export const canvas = new fabric.Canvas("drawing-board", {
   isDrawingMode: true,
   height: screen.availHeight,
@@ -67,20 +68,10 @@ canvas.freeDrawingBrush.color = strokeColor;
 
 /**
  *
- * 
+ *
  * **********************   Event Listeners.    ****************
- * 
+ *
  */
-
-//this for hide online dropdown when click anywhere in th window
-window.onclick = (e) => {
-  if (!e.target.matches(".dropbtn")) {
-    let dropdown = document.getElementById("content-drop");
-    if (dropdown.classList.contains("show")) {
-      dropdown.classList.remove("show");
-    }
-  }
-};
 
 // Toolbar listeners
 toolBar.addEventListener("click", (e) => {
@@ -106,12 +97,10 @@ toolBar.addEventListener("click", (e) => {
     emitUndoOrRedo("r");
   }
   if (e.target.id === "shapes") {
-    let subTools = document.getElementById("sub-tool");
-    console.log(subTools);
-    if (subTools.style.display === "none") {
-      subTools.style.display = "flex";
+    if (subToolBar.style.display === "none") {
+      subToolBar.style.display = "flex";
     } else {
-      subTools.style.display = "none";
+      subToolBar.style.display = "none";
     }
   }
   if (e.target.id === "text") {
@@ -119,6 +108,24 @@ toolBar.addEventListener("click", (e) => {
     toggleActive(e.target);
   }
 });
+
+//this for hide online dropdown when click anywhere in th window
+window.onclick = (e) => {
+  if (!e.target.matches(".dropbtn")) {
+    let dropdown = document.getElementById("content-drop");
+    if (dropdown.classList.contains("show")) {
+      dropdown.classList.remove("show");
+    }
+  }
+
+  if (
+    subToolBar.style.display === "flex" &&
+    !e.target.matches("#shapes,#sub-tool img")
+  ) {
+    subToolBar.style.display = "none";
+    console.log(subToolBar.style.display);
+  }
+};
 
 //tool bar input events. colors and line width
 toolBar.addEventListener("input", (e) => {
@@ -193,7 +200,7 @@ document.addEventListener("mousemove", (e) => {
 
 //
 document.addEventListener("click", () => {
-  console.log('hii');
+  console.log("hii");
   document.getElementById("content-drop").classList.toggle("show");
 });
 
@@ -300,4 +307,24 @@ canvas.on("selection:created", (option) => {
     emitObj(canvasEmitObject);
   }
   console.log(option, "added");
+});
+
+const toolbarBtn = document.getElementById("toggle-btn");
+function toggleToolbar() {
+  toolBar.classList.toggle("hidden");
+  toolbarBtn.style.display = "block";
+}
+
+toolbarBtn.addEventListener("mouseenter", () => {
+  toolBar.classList.toggle("hidden");
+  toolbarBtn.style.display = "none";
+});
+
+let timeout = setTimeout(() => toggleToolbar(), 5000);
+toolBar.addEventListener("mouseleave", () => {
+  timeout = setTimeout(() => toggleToolbar(), 5000);
+});
+
+toolBar.addEventListener("mouseenter", () => {
+  clearTimeout(timeout);
 });
